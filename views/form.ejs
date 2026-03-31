@@ -1,25 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Health Check | NutriScan</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
-      --sage:    #4a7c59;
+      --sage: #4a7c59;
       --sage-dk: #2f5c3e;
       --sage-lt: #d4e8d9;
-      --cream:   #faf7f2;
-      --sand:    #e8e0d0;
-      --charcoal:#1c2320;
-      --muted:   #6b7c72;
-      --accent:  #c97b38;
-      --danger:  #c0392b;
-      --radius:  14px;
+      --cream: #faf7f2;
+      --sand: #e8e0d0;
+      --charcoal: #1c2320;
+      --muted: #6b7c72;
+      --accent: #c97b38;
+      --danger: #c0392b;
+      --radius: 14px;
     }
 
     body {
@@ -68,7 +77,10 @@
       line-height: 1.15;
     }
 
-    .panel-title em { font-style: italic; color: #a8d5b5; }
+    .panel-title em {
+      font-style: italic;
+      color: #a8d5b5;
+    }
 
     .panel-desc {
       font-size: .93rem;
@@ -76,34 +88,49 @@
       opacity: .78;
     }
 
-    .models-list { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+    .models-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
 
     .model-badge {
       display: flex;
       align-items: center;
       gap: 12px;
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .18);
       border-radius: 10px;
       padding: 12px 16px;
     }
 
     .model-badge .dot {
-      width: 9px; height: 9px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: #a8d5b5;
       flex-shrink: 0;
-      box-shadow: 0 0 0 3px rgba(168,213,181,.25);
+      box-shadow: 0 0 0 3px rgba(168, 213, 181, .25);
     }
 
-    .model-badge .name { font-size: .85rem; font-weight: 600; }
-    .model-badge .sub  { font-size: .75rem; opacity: .6; }
+    .model-badge .name {
+      font-size: .85rem;
+      font-weight: 600;
+    }
+
+    .model-badge .sub {
+      font-size: .75rem;
+      opacity: .6;
+    }
 
     .panel-blob {
       position: absolute;
-      bottom: -80px; right: -80px;
-      width: 280px; height: 280px;
-      background: rgba(255,255,255,.05);
+      bottom: -80px;
+      right: -80px;
+      width: 280px;
+      height: 280px;
+      background: rgba(255, 255, 255, .05);
       border-radius: 50%;
       pointer-events: none;
     }
@@ -115,7 +142,9 @@
       overflow-y: auto;
     }
 
-    .form-header { margin-bottom: 40px; }
+    .form-header {
+      margin-bottom: 40px;
+    }
 
     .form-header h2 {
       font-family: 'DM Serif Display', serif;
@@ -123,7 +152,11 @@
       color: var(--charcoal);
     }
 
-    .form-header p { color: var(--muted); font-size: .93rem; margin-top: 6px; }
+    .form-header p {
+      color: var(--muted);
+      font-size: .93rem;
+      margin-top: 6px;
+    }
 
     /* ── Section headings ────────────────────────────── */
     .field-section {
@@ -156,7 +189,11 @@
       gap: 16px 20px;
     }
 
-    .field-group { display: flex; flex-direction: column; gap: 6px; }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
     .field-group label {
       font-size: .8rem;
@@ -189,25 +226,33 @@
     .field-group input:focus,
     .field-group select:focus {
       border-color: var(--sage);
-      box-shadow: 0 0 0 3px rgba(74,124,89,.12);
+      box-shadow: 0 0 0 3px rgba(74, 124, 89, .12);
     }
 
-    .field-group input::placeholder { color: #c0ccc4; }
+    .field-group input::placeholder {
+      color: #c0ccc4;
+    }
 
     /* custom select arrow */
-    .select-wrap { position: relative; }
+    .select-wrap {
+      position: relative;
+    }
 
     .select-wrap::after {
       content: '▾';
       position: absolute;
-      right: 14px; top: 50%;
+      right: 14px;
+      top: 50%;
       transform: translateY(-50%);
       color: var(--muted);
       pointer-events: none;
       font-size: .85rem;
     }
 
-    .select-wrap select { padding-right: 36px; cursor: pointer; }
+    .select-wrap select {
+      padding-right: 36px;
+      cursor: pointer;
+    }
 
     /* ── Condition toggles ───────────────────────────── */
     .conditions-grid {
@@ -240,15 +285,25 @@
       overflow: hidden;
     }
 
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(47,92,62,.35); }
-    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(47, 92, 62, .35);
+    }
 
-    .btn-submit.loading { pointer-events: none; opacity: .7; }
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit.loading {
+      pointer-events: none;
+      opacity: .7;
+    }
 
     .btn-submit .spinner {
       display: none;
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,.4);
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, .4);
       border-top-color: #fff;
       border-radius: 50%;
       animation: spin .7s linear infinite;
@@ -256,11 +311,23 @@
       margin-right: 8px;
     }
 
-    .btn-submit.loading .spinner { display: inline-block; }
-    .btn-submit.loading .btn-text::before { content: 'Analysing…'; }
-    .btn-submit:not(.loading) .btn-text::before { content: 'Run Health Analysis'; }
+    .btn-submit.loading .spinner {
+      display: inline-block;
+    }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-submit.loading .btn-text::before {
+      content: 'Analysing…';
+    }
+
+    .btn-submit:not(.loading) .btn-text::before {
+      content: 'Run Health Analysis';
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
     .reset-btn {
       background: none;
@@ -274,20 +341,30 @@
       transition: all .2s;
     }
 
-    .reset-btn:hover { border-color: var(--muted); color: var(--charcoal); }
+    .reset-btn:hover {
+      border-color: var(--muted);
+      color: var(--charcoal);
+    }
 
     /* ── Result modal ─────────────────────────────────── */
     .result-overlay {
-      position: fixed; inset: 0;
-      background: rgba(28,35,32,.55);
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 35, 32, .55);
       backdrop-filter: blur(4px);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       z-index: 9999;
-      opacity: 0; pointer-events: none;
+      opacity: 0;
+      pointer-events: none;
       transition: opacity .3s;
     }
 
-    .result-overlay.show { opacity: 1; pointer-events: all; }
+    .result-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
 
     .result-card {
       background: #fff;
@@ -300,19 +377,28 @@
       position: relative;
     }
 
-    .result-overlay.show .result-card { transform: translateY(0); }
+    .result-overlay.show .result-card {
+      transform: translateY(0);
+    }
 
     .result-close {
-      position: absolute; top: 18px; right: 22px;
-      background: none; border: none;
-      font-size: 1.3rem; color: var(--muted);
-      cursor: pointer; line-height: 1;
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: var(--muted);
+      cursor: pointer;
+      line-height: 1;
     }
 
     .result-eyebrow {
-      font-size: 10px; letter-spacing: 3px;
+      font-size: 10px;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      color: var(--sage); font-weight: 600;
+      color: var(--sage);
+      font-weight: 600;
       margin-bottom: 10px;
     }
 
@@ -322,7 +408,11 @@
       margin-bottom: 28px;
     }
 
-    .result-models { display: flex; flex-direction: column; gap: 14px; }
+    .result-models {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
     .result-model-row {
       border: 1.5px solid var(--sand);
@@ -333,22 +423,46 @@
       gap: 16px;
     }
 
-    .result-model-row.healthy  { border-color: #4a7c59; background: #f0f8f2; }
-    .result-model-row.unhealthy{ border-color: #c0392b; background: #fdf2f2; }
+    .result-model-row.healthy {
+      border-color: #4a7c59;
+      background: #f0f8f2;
+    }
 
-    .result-verdict-icon { font-size: 1.8rem; }
+    .result-model-row.unhealthy {
+      border-color: #c0392b;
+      background: #fdf2f2;
+    }
 
-    .result-model-name { font-size: .78rem; font-weight: 700; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; }
+    .result-verdict-icon {
+      font-size: 1.8rem;
+    }
+
+    .result-model-name {
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
 
     .result-verdict {
       font-size: 1.05rem;
       font-weight: 700;
     }
 
-    .result-model-row.healthy  .result-verdict { color: #2f5c3e; }
-    .result-model-row.unhealthy .result-verdict { color: #c0392b; }
+    .result-model-row.healthy .result-verdict {
+      color: #2f5c3e;
+    }
 
-    .result-conf { font-size: .82rem; color: var(--muted); margin-top: 2px; }
+    .result-model-row.unhealthy .result-verdict {
+      color: #c0392b;
+    }
+
+    .result-conf {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
 
     .confidence-bar {
       height: 4px;
@@ -364,8 +478,13 @@
       transition: width 1s ease;
     }
 
-    .healthy  .confidence-fill { background: var(--sage); }
-    .unhealthy .confidence-fill { background: #c0392b; }
+    .healthy .confidence-fill {
+      background: var(--sage);
+    }
+
+    .unhealthy .confidence-fill {
+      background: #c0392b;
+    }
 
     .result-note {
       font-size: .8rem;
@@ -378,242 +497,259 @@
 
     /* ── Responsive ───────────────────────────────────── */
     @media (max-width: 900px) {
-      .page-wrap { grid-template-columns: 1fr; }
-      .left-panel { position: static; height: auto; }
-      .form-area { padding: 36px 24px; }
-      .inputs-grid { grid-template-columns: 1fr; }
-      .conditions-grid { grid-template-columns: 1fr 1fr; }
+      .page-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .left-panel {
+        position: static;
+        height: auto;
+      }
+
+      .form-area {
+        padding: 36px 24px;
+      }
+
+      .inputs-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .conditions-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
 
-  <%- include('partials/navbar') %> 
+  <%- include('partials/navbar') %>
 
-  <div class="page-wrap">
+    <div class="page-wrap">
 
-    <!-- ── Left panel ── -->
-    <aside class="left-panel">
-      <div>
-        <p class="panel-eyebrow">NutriScan AI</p>
-        <h1 class="panel-title">Food <em>Health</em><br>Analysis</h1>
-      </div>
-      <p class="panel-desc">
-        Enter the nutritional values of your food product and let our dual-model
-        AI system classify its health impact based on your conditions.
-      </p>
-      <div>
-        <p class="section-label" style="color:#a8d5b5; letter-spacing:2px; font-size:.72rem; margin-bottom:12px;">POWERED BY</p>
-        <div class="models-list">
-          <div class="model-badge">
-            <span class="dot"></span>
-            <div>
-              <div class="name">Logistic Regression</div>
-              <div class="sub">Statistical classifier</div>
-            </div>
-          </div>
-          <div class="model-badge">
-            <span class="dot" style="background:#f9c784; box-shadow:0 0 0 3px rgba(249,199,132,.2);"></span>
-            <div>
-              <div class="name">XGBoost</div>
-              <div class="sub">Gradient boosted ensemble</div>
-            </div>
-          </div>
+      <!-- ── Left panel ── -->
+      <aside class="left-panel">
+        <div>
+          <p class="panel-eyebrow">NutriScan AI</p>
+          <h1 class="panel-title">Food <em>Health</em><br>Analysis</h1>
         </div>
-      </div>
-      <div class="panel-blob"></div>
-    </aside>
-
-    <!-- ── Form area ── -->
-    <main class="form-area">
-      <div class="form-header">
-        <h2>Enter Product Details</h2>
-        <p>Fill in the nutritional information from the food label below.</p>
-      </div>
-
-      <form id="healthForm" novalidate>
-
-        <!-- Macronutrients -->
-        <div class="field-section">
-          <p class="section-label">Macronutrients</p>
-          <div class="inputs-grid">
-            <div class="field-group">
-              <label>Calories <span class="unit-hint">kcal</span></label>
-              <input type="number" name="Calories" placeholder="e.g. 250" min="0" required />
-            </div>
-            <div class="field-group">
-              <label>Protein <span class="unit-hint">grams</span></label>
-              <input type="number" name="Protein" placeholder="e.g. 12" min="0" required />
-            </div>
-            <div class="field-group">
-              <label>Carbohydrates <span class="unit-hint">grams</span></label>
-              <input type="number" name="Carbohydrates" placeholder="e.g. 30" min="0" required />
-            </div>
-            <div class="field-group">
-              <label>Fat <span class="unit-hint">grams</span></label>
-              <input type="number" name="Fat" placeholder="e.g. 8" min="0" required />
-            </div>
-          </div>
-        </div>
-
-        <!-- Micronutrients -->
-        <div class="field-section">
-          <p class="section-label">Micronutrients &amp; Others</p>
-          <div class="inputs-grid">
-            <div class="field-group">
-              <label>Fiber <span class="unit-hint">grams</span></label>
-              <input type="number" name="Fiber" placeholder="e.g. 4" min="0" required />
-            </div>
-            <div class="field-group">
-              <label>Sugars <span class="unit-hint">grams</span></label>
-              <input type="number" name="Sugars" placeholder="e.g. 10" min="0" required />
-            </div>
-            <div class="field-group">
-              <label>Sodium <span class="unit-hint">mg</span></label>
-              <input type="number" name="Sodium" placeholder="e.g. 480" min="0" required />
-            </div>
-            <div class="field-group">
-              <label>Cholesterol <span class="unit-hint">mg</span></label>
-              <input type="number" name="Cholesterol" placeholder="e.g. 15" min="0" required />
-            </div>
-          </div>
-        </div>
-
-        <!-- Health conditions -->
-        <div class="field-section">
-          <p class="section-label">Your Health Conditions</p>
-          <div class="conditions-grid">
-
-            <div class="field-group">
-              <label>🩸 Diabetes</label>
-              <div class="select-wrap">
-                <select name="diabetes" required>
-                  <option value="0">No</option>
-                  <option value="1">Yes</option>
-                </select>
+        <p class="panel-desc">
+          Enter the nutritional values of your food product and let our dual-model
+          AI system classify its health impact based on your conditions.
+        </p>
+        <div>
+          <p class="section-label" style="color:#a8d5b5; letter-spacing:2px; font-size:.72rem; margin-bottom:12px;">
+            POWERED BY</p>
+          <div class="models-list">
+            <div class="model-badge">
+              <span class="dot"></span>
+              <div>
+                <div class="name">Logistic Regression</div>
+                <div class="sub">Statistical classifier</div>
               </div>
             </div>
-
-            <div class="field-group">
-              <label>⚖️ Obesity</label>
-              <div class="select-wrap">
-                <select name="obesity" required>
-                  <option value="0">No</option>
-                  <option value="1">Yes</option>
-                </select>
+            <div class="model-badge">
+              <span class="dot" style="background:#f9c784; box-shadow:0 0 0 3px rgba(249,199,132,.2);"></span>
+              <div>
+                <div class="name">XGBoost</div>
+                <div class="sub">Gradient boosted ensemble</div>
               </div>
             </div>
-
-            <div class="field-group">
-              <label>❤️ High BP</label>
-              <div class="select-wrap">
-                <select name="bp" required>
-                  <option value="0">No</option>
-                  <option value="1">Yes</option>
-                </select>
-              </div>
-            </div>
-
           </div>
         </div>
+        <div class="panel-blob"></div>
+      </aside>
 
-        <!-- Submit -->
-        <div class="submit-row">
-          <button type="submit" class="btn-submit" id="submitBtn">
-            <span class="spinner"></span>
-            <span class="btn-text"></span>
-          </button>
-          <button type="reset" class="reset-btn" onclick="resetForm()">Clear</button>
+      <!-- ── Form area ── -->
+      <main class="form-area">
+        <div class="form-header">
+          <h2>Enter Product Details</h2>
+          <p>Fill in the nutritional information from the food label below.</p>
         </div>
 
-      </form>
-    </main>
-  </div>
+        <form id="healthForm" novalidate>
 
-  <!-- ── Result modal ── -->
-  <div class="result-overlay" id="resultOverlay">
-    <div class="result-card">
-      <button class="result-close" onclick="closeResult()">✕</button>
-      <p class="result-eyebrow">Analysis Complete</p>
-      <h2 class="result-title" id="resultTitle">Your Results</h2>
-      <div class="result-models" id="resultModels"></div>
-      <p class="result-note">
-        This analysis is AI-generated and intended for informational purposes only.
-        Always consult a registered dietitian or physician for personalised advice.
-      </p>
+          <!-- Macronutrients -->
+          <div class="field-section">
+            <p class="section-label">Macronutrients</p>
+            <div class="inputs-grid">
+              <div class="field-group">
+                <label>Calories <span class="unit-hint">kcal</span></label>
+                <input type="number" name="Calories" placeholder="e.g. 250" min="0" required />
+              </div>
+              <div class="field-group">
+                <label>Protein <span class="unit-hint">grams</span></label>
+                <input type="number" name="Protein" placeholder="e.g. 12" min="0" required />
+              </div>
+              <div class="field-group">
+                <label>Carbohydrates <span class="unit-hint">grams</span></label>
+                <input type="number" name="Carbohydrates" placeholder="e.g. 30" min="0" required />
+              </div>
+              <div class="field-group">
+                <label>Fat <span class="unit-hint">grams</span></label>
+                <input type="number" name="Fat" placeholder="e.g. 8" min="0" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- Micronutrients -->
+          <div class="field-section">
+            <p class="section-label">Micronutrients &amp; Others</p>
+            <div class="inputs-grid">
+              <div class="field-group">
+                <label>Fiber <span class="unit-hint">grams</span></label>
+                <input type="number" name="Fiber" placeholder="e.g. 4" min="0" required />
+              </div>
+              <div class="field-group">
+                <label>Sugars <span class="unit-hint">grams</span></label>
+                <input type="number" name="Sugars" placeholder="e.g. 10" min="0" required />
+              </div>
+              <div class="field-group">
+                <label>Sodium <span class="unit-hint">mg</span></label>
+                <input type="number" name="Sodium" placeholder="e.g. 480" min="0" required />
+              </div>
+              <div class="field-group">
+                <label>Cholesterol <span class="unit-hint">mg</span></label>
+                <input type="number" name="Cholesterol" placeholder="e.g. 15" min="0" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- Health conditions -->
+          <div class="field-section">
+            <p class="section-label">Your Health Conditions</p>
+            <div class="conditions-grid">
+
+              <div class="field-group">
+                <label>🩸 Diabetes</label>
+                <div class="select-wrap">
+                  <select name="diabetes" required>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label>⚖️ Obesity</label>
+                <div class="select-wrap">
+                  <select name="obesity" required>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label>❤️ High BP</label>
+                <div class="select-wrap">
+                  <select name="bp" required>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <div class="submit-row">
+            <button type="submit" class="btn-submit" id="submitBtn">
+              <span class="spinner"></span>
+              <span class="btn-text"></span>
+            </button>
+            <button type="reset" class="reset-btn" onclick="resetForm()">Clear</button>
+          </div>
+
+        </form>
+      </main>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    /* ── Reset ── */
-    function resetForm() {
-      document.getElementById('healthForm').reset();
-    }
+    <!-- ── Result modal ── -->
+    <div class="result-overlay" id="resultOverlay">
+      <div class="result-card">
+        <button class="result-close" onclick="closeResult()">✕</button>
+        <p class="result-eyebrow">Analysis Complete</p>
+        <h2 class="result-title" id="resultTitle">Your Results</h2>
+        <div class="result-models" id="resultModels"></div>
+        <p class="result-note">
+          This analysis is AI-generated and intended for informational purposes only.
+          Always consult a registered dietitian or physician for personalised advice.
+        </p>
+      </div>
+    </div>
 
-    /* ── Submit ── */
-    document.getElementById('healthForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const btn = document.getElementById('submitBtn');
-      btn.classList.add('loading');
-
-      const formData  = new FormData(e.target);
-      const data      = Object.fromEntries(formData.entries());
-      Object.keys(data).forEach(k => data[k] = Number(data[k]));
-
-      try {
-        const [logRes, xgbRes] = await Promise.all([
-          fetch('https://food-health-api-udsy.onrender.com/predict', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-          }),
-          fetch('https://food-health-classifier-api.onrender.com/predict', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-          })
-        ]);
-
-        const [logData, xgbData] = await Promise.all([logRes.json(), xgbRes.json()]);
-
-        showResult(logData, xgbData);
-      } catch (err) {
-        console.error(err);
-        alert('Could not reach the prediction APIs. Please try again.');
-      } finally {
-        btn.classList.remove('loading');
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      /* ── Reset ── */
+      function resetForm() {
+        document.getElementById('healthForm').reset();
       }
-    });
 
-    /* ── Modal display ── */
-    function showResult(logData, xgbData) {
-      const models = [
-        {
-          name: 'Logistic Regression',
-          pred: logData.prediction,
-          prob: logData.probability
-        },
-        {
-          name: 'XGBoost',
-          pred: xgbData.prediction,
-          prob: xgbData.probability
+      /* ── Submit ── */
+      document.getElementById('healthForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const btn = document.getElementById('submitBtn');
+        btn.classList.add('loading');
+
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        Object.keys(data).forEach(k => data[k] = Number(data[k]));
+
+        try {
+          const [logRes, xgbRes] = await Promise.all([
+            fetch('https://food-health-api-udsy.onrender.com/predict', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            }),
+            fetch('https://food-health-classifier-api.onrender.com/predict', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            })
+          ]);
+
+          const [logData, xgbData] = await Promise.all([logRes.json(), xgbRes.json()]);
+
+          showResult(logData, xgbData);
+        } catch (err) {
+          console.error(err);
+          alert('Could not reach the prediction APIs. Please try again.');
+        } finally {
+          btn.classList.remove('loading');
         }
-      ];
+      });
 
-      const bothHealthy = models.every(m => m.pred === 1);
-      const bothUnhealthy = models.every(m => m.pred === 0);
+      /* ── Modal display ── */
+      function showResult(logData, xgbData) {
+        const models = [
+          {
+            name: 'Logistic Regression',
+            pred: logData.prediction,
+            prob: logData.probability
+          },
+          {
+            name: 'XGBoost',
+            pred: xgbData.prediction,
+            prob: xgbData.probability
+          }
+        ];
 
-      document.getElementById('resultTitle').textContent =
-        bothHealthy   ? '✅ Looking Good!' :
-        bothUnhealthy ? '⚠️ High Risk Detected' :
-                        '🔍 Mixed Signals';
+        const bothHealthy = models.every(m => m.pred === 1);
+        const bothUnhealthy = models.every(m => m.pred === 0);
 
-      document.getElementById('resultModels').innerHTML = models.map(m => {
-        const label = m.pred === 1 ? 'Healthy' : 'Unhealthy';
-        const cls   = label.toLowerCase();
-        const conf  = (m.prob[cls] * 100).toFixed(1);
-        const icon  = label === 'Healthy' ? '🌿' : '⚠️';
-        return `
+        document.getElementById('resultTitle').textContent =
+          bothHealthy ? '✅ Looking Good!' :
+            bothUnhealthy ? '⚠️ High Risk Detected' :
+              '🔍 Mixed Signals';
+
+        document.getElementById('resultModels').innerHTML = models.map(m => {
+          const label = m.pred === 1 ? 'Healthy' : 'Unhealthy';
+          const cls = label.toLowerCase();
+          const conf = (m.prob[cls] * 100).toFixed(1);
+          const icon = label === 'Healthy' ? '🌿' : '⚠️';
+          return `
           <div class="result-model-row ${cls}">
             <div class="result-verdict-icon">${icon}</div>
             <div style="flex:1">
@@ -625,29 +761,42 @@
               </div>
             </div>
           </div>`;
-      }).join('');
+        }).join('');
 
-      const overlay = document.getElementById('resultOverlay');
-      overlay.classList.add('show');
+        const overlay = document.getElementById('resultOverlay');
+        overlay.classList.add('show');
 
-      // Animate confidence bars after paint
-      requestAnimationFrame(() => {
+        // Animate confidence bars after paint
         requestAnimationFrame(() => {
-          overlay.querySelectorAll('.confidence-fill').forEach(el => {
-            el.style.width = el.dataset.width;
+          requestAnimationFrame(() => {
+            overlay.querySelectorAll('.confidence-fill').forEach(el => {
+              el.style.width = el.dataset.width;
+            });
           });
         });
+      }
+
+      function closeResult() {
+        document.getElementById('resultOverlay').classList.remove('show');
+      }
+
+      // Close on backdrop click
+      document.getElementById('resultOverlay').addEventListener('click', function (e) {
+        if (e.target === this) closeResult();
       });
-    }
+    </script>
+    <script>
+      window.onload = function () {
+        const params = new URLSearchParams(window.location.search);
 
-    function closeResult() {
-      document.getElementById('resultOverlay').classList.remove('show');
-    }
-
-    // Close on backdrop click
-    document.getElementById('resultOverlay').addEventListener('click', function(e) {
-      if (e.target === this) closeResult();
-    });
-  </script>
+        params.forEach((value, key) => {
+          const input = document.querySelector(`[name="${key}"]`);
+          if (input) {
+            input.value = value;
+          }
+        });
+      };
+    </script>
 </body>
+
 </html>
