@@ -19,6 +19,18 @@ app.get('/form', (req, res) => {
   res.render('form'); // no need to write .ejs
 });
 
+app.get('/scan', (req, res) => {
+  res.render('scan');
+});
+
+app.get('/label-scan', (req, res) => {
+  res.render('form');
+});
+
+app.get('/manual', (req, res) => {
+  res.render('form');
+});
+
 
 // Handle form POST request (from form.ejs)
 app.post('/api/check-health', (req, res) => {
@@ -33,5 +45,5 @@ app.get('/', (req, res) => {
 
 
 app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
