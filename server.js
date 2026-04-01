@@ -52,6 +52,18 @@ app.get('/form', (req, res) => {
   res.render('form');
 });
 
+app.get('/scan', (req, res) => {
+  res.render('scan');
+});
+
+app.get('/label-scan', (req, res) => {
+  res.render('form');
+});
+
+app.get('/manual', (req, res) => {
+  res.render('form');
+});
+
 
 app.post('/signup', async (req, res) => {
   const { username, password } = req.body;
