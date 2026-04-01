@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Upgrade Plan</title>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c') no-repeat center/cover;
+    }
+
+    .overlay {
+      backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.5);
+      min-height: 100vh;
+      padding: 30px;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    .plans {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 50px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: white;
+      color: black;
+      padding: 20px;
+      width: 220px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    }
+
+    .premium {
+      background: linear-gradient(to bottom, #ff7e5f, #ff3f00);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .price {
+      font-size: 28px;
+      margin: 10px 0;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-basic { background: #3498db; color: white; }
+    .btn-premium { background: white; color: #ff3f00; }
+    .btn-pro { background: #27ae60; color: white; }
+
+    i { margin-right: 6px; }
+
+    .popup {
+      position: fixed;
+      top: 20px;
+      right: -300px;
+      background: #27ae60;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: 0.4s;
+      z-index: 999;
+    }
+
+    .popup.show {
+      right: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+  <h1>🚀 Upgrade Your Plan</h1>
+  <p>Choose a plan to unlock more features</p>
+
+  <!-- PLANS -->
+  <div class="plans">
+
+    <div class="card">
+      <h3><i class="fa-solid fa-seedling"></i> Basic Plan</h3>
+      <p>10 scans / month</p>
+      <div class="price">₹49</div>
+      <button class="btn-basic" onclick="buy('BASIC')">Select Plan</button>
+    </div>
+
+    <div class="card premium">
+      <h3><i class="fa-solid fa-crown"></i> Premium Plan</h3>
+      <p>Unlimited scans</p>
+      <div class="price">₹99</div>
+      <button class="btn-premium" onclick="buy('PREMIUM')">Upgrade Now</button>
+    </div>
+
+    <div class="card">
+      <h3><i class="fa-solid fa-star"></i> Pro Plan</h3>
+      <p>Yearly subscription</p>
+      <div class="price">₹899</div>
+      <button class="btn-pro" onclick="buy('PRO')">Choose Plan</button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ✅ Popup -->
+<div id="popup" class="popup">
+  <i class="fa-solid fa-circle-check"></i>
+  <span id="popupText"></span>
+</div>
+
+<script>
+
+let userId = 1; // 🔥 replace with login later
+
+function showPopup(msg, color="#27ae60") {
+  let popup = document.getElementById("popup");
+  let text = document.getElementById("popupText");
+
+  popup.style.background = color;
+  text.innerText = msg;
+
+  popup.classList.add("show");
+
+  setTimeout(() => popup.classList.remove("show"), 3000);
+}
+
+// 💳 Razorpay Payment
+async function buy(plan) {
+
+  try {
+    let res = await fetch("http://localhost:8080/create-order?plan=" + plan);
+    let order = await res.json();
+
+    let options = {
+      key: "rzp_test_S7himHMdfujbzL", // 🔥 replace
+      amount: order.amount,
+      order_id: order.id,
+
+      handler: async function (response) {
+
+        await fetch("http://localhost:8080/verify-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...response,
+            userId,
+            plan
+          })
+        });
+
+        showPopup("✅ Payment Successful!");
+
+        setTimeout(() => {
+          window.location.href = "/scan";
+        }, 1500);
+      }
+    };
+
+    new Razorpay(options).open();
+
+  } catch (err) {
+    console.error(err);
+    showPopup("❌ Payment Failed", "#e74c3c");
+  }
+}
+
+</script>
+
+</body>
+</html>
