@@ -25,8 +25,10 @@ public class CreateOrderController {
     private RazorpayService razorpayService;
 
     @GetMapping("/create-order")
-    public Map<String, Object> createOrder(@RequestParam String plan) throws Exception {
-
+    public Map<String, Object> createOrder(
+            @RequestParam String plan,
+            @RequestParam String username) throws Exception {
+    	System.out.println("User: " + username);
         int amount = 0;
 
         if (plan.equals("BASIC")) {
