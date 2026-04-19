@@ -1533,11 +1533,13 @@
                         <div class="p-4 rounded-4 shadow-sm border">
                             <h4>Unlabelled Food</h4>
                             <p class="text-muted">
-                                Coming soon (AI vision)
+                                AI vision
                             </p>
-                            <button class="btn btn-secondary mt-2" disabled>
-                                Coming Soon
+                            <button onclick="openUnlabeled()" class="btn btn-warning mt-2">
+                                Scan Food (AI)
                             </button>
+
+                            <input type="file" id="unlabeledInput" accept="image/*" hidden>
                         </div>
                     </div>
 
@@ -1679,6 +1681,81 @@
                         Cholesterol: extract(/cholesterol\s*(\d+\.?\d*)/)
                     };
                 }
+
+                function openUnlabeled() {
+                    const input = document.getElementById("unlabeledInput");
+                    input.click();
+                    input.onchange = handleUnlabeled;
+                }
+
+                async function handleUnlabeled(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    document.getElementById("loadingOverlay").style.display = "flex";
+
+                    const formData = new FormData();
+                    formData.append("image", file);
+
+                    try {
+                        const res = await fetch("/unlabeled-scan", {
+                            method: "POST",
+                            body: formData
+                        });
+
+                        const data = await res.json();
+
+                        console.log("API RESPONSE:", data); // 🔥 IMPORTANT
+
+                        // hide loader BEFORE redirect
+                        document.getElementById("loadingOverlay").style.display = "none";
+
+                        const query = new URLSearchParams(data.macros).toString();
+
+                        window.location.href = "/form?" + query;
+
+                    } catch (err) {
+                        console.error(err);
+
+                        document.getElementById("loadingOverlay").style.display = "none";
+
+                        alert("Unlabeled scan failed");
+                    }
+                }
+                // async function handleUnlabeled(event) {
+                //     const file = event.target.files[0];
+                //     if (!file) return;
+
+                //     document.getElementById("loadingOverlay").style.display = "flex";
+
+                //     const formData = new FormData();
+                //     formData.append("image", file);
+
+                //     try {
+                //         const res = await fetch("/unlabeled-scan", {
+                //             method: "POST",
+                //             body: formData
+                //         });
+
+                //         const data = await res.json();
+
+                //         // redirect to form with values
+                //         const query = new URLSearchParams(data.macros).toString();
+                //         // const query = new URLSearchParams({
+                //         //     Calories: data.macros.calories,
+                //         //     Protein: data.macros.protein,
+                //         //     Carbohydrates: data.macros.carbs,
+                //         //     Fat: data.macros.fat
+                //         // }).toString();
+
+                //         window.location.href = "/form?" + query;
+
+                //     } catch (err) {
+                //         console.error(err);
+                //         alert("Unlabeled scan failed");
+                //     }
+                // }
+
             </script>
             </div>
         </section>
