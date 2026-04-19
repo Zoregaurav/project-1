@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Signup</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
 
   <style>
     * {
@@ -42,7 +45,7 @@
       content: '';
       position: absolute;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(168,230,181,0.1), transparent);
+      background: radial-gradient(circle, rgba(168, 230, 181, 0.1), transparent);
       animation: float 18s infinite ease-in-out;
     }
 
@@ -62,8 +65,15 @@
     }
 
     @keyframes float {
-      0%,100% { transform: translate(0,0); }
-      50% { transform: translate(30px,30px); }
+
+      0%,
+      100% {
+        transform: translate(0, 0);
+      }
+
+      50% {
+        transform: translate(30px, 30px);
+      }
     }
 
     .container {
@@ -75,13 +85,20 @@
       width: 100%;
       max-width: 420px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       animation: fadeUp 0.5s ease;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     h2 {
@@ -106,8 +123,8 @@
       width: 100%;
       padding: 14px;
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
       color: white;
       outline: none;
       transition: 0.25s;
@@ -119,7 +136,7 @@
 
     input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(168,230,181,0.2);
+      box-shadow: 0 0 0 2px rgba(168, 230, 181, 0.2);
     }
 
     label {
@@ -134,8 +151,8 @@
       padding: 0 5px;
     }
 
-    input:focus + label,
-    input:not(:placeholder-shown) + label {
+    input:focus+label,
+    input:not(:placeholder-shown)+label {
       top: -8px;
       font-size: 0.7rem;
       color: var(--accent);
@@ -156,7 +173,7 @@
 
     button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(45,122,79,0.4);
+      box-shadow: 0 6px 18px rgba(45, 122, 79, 0.4);
     }
 
     .divider {
@@ -190,7 +207,7 @@
 <body>
 
   <div class="container">
-      <h2>Welcome Back<span class="emoji">🌿</span></h2>
+    <h2>Welcome Back<span class="emoji">🌿</span></h2>
     <p class="subtitle">Sign in to continue your journey</p>
     <form action="/login" method="POST">
 
@@ -204,14 +221,15 @@
         <label>Password</label>
       </div>
 
-      <button type="submit">Sign Up</button>
+      <button type="submit">Sign In</button>
 
     </form>
 
     <div class="divider">or</div>
 
-    <a href="/signup">Already have an account? Sign In</a>
+    <a href="/signup">Don't have an account? Sign Up</a>
   </div>
 
 </body>
+
 </html>
