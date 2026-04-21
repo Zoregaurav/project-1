@@ -47,6 +47,9 @@ app.get("/form", (req, res) => {
 });
 
 app.get("/scan", (req, res) => res.render("scan"));
+app.get("/subscription", (req, res) => {
+  res.render("subscription");
+});
 app.get("/label-scan", (req, res) => res.render("form"));
 app.get("/manual", (req, res) => res.render("form"));
 
@@ -62,12 +65,38 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+/* =========================
+   🔥 MERGED LOGIN (TEAM + YOUR FEATURE)
+   - Team redirect kept
+   - Your free scan logic added
+========================= */
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await User.findOne({ username, password });
-    if (user) res.redirect("/index");
-    else res.send("Invalid credentials");
+
+    if (user) {
+      // ✅ YOUR LOGIC ADDED (localStorage injection)
+      res.send(`
+        <script>
+          const user = {
+            username: "${user.username}",
+            freeScansLeft: 5
+          };
+
+          localStorage.setItem("user", JSON.stringify(user));
+
+          // also support your scansLeft logic
+          if (!localStorage.getItem("scansLeft")) {
+            localStorage.setItem("scansLeft", 5);
+          }
+
+          window.location.href = "/index";
+        </script>
+      `);
+    } else {
+      res.send("Invalid credentials");
+    }
   } catch (err) {
     res.send("Error during login");
   }
@@ -167,6 +196,17 @@ Return ONLY valid JSON in this exact format:
     console.error(err);
     res.status(500).send("Unlabeled scan failed");
   }
+});
+
+/* =========================
+   YOUR EXTRA API (KEPT)
+========================= */
+app.post('/api/check-health', (req, res) => {
+  const { calories, fat, diabeties, bgp, obesity } = req.body;
+
+  const isHealthy = calories < 100 && fat < 5 && diabeties === 'no';
+
+  res.json({ result: isHealthy ? 'Healthy' : 'Not Healthy' });
 });
 
 // Start server

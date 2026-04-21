@@ -1547,83 +1547,127 @@
 
             </div>
             <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+/* =========================
+   ✅ SCAN LIMIT LOGIC (YOUR CODE)
+========================= */
+let scansLeft = localStorage.getItem("scansLeft");
 
-            <script>
-                function openCamera() {
-                    const input = document.getElementById("cameraInput");
-                    input.click();
-                    input.onchange = handleImage;
-                }
+if (scansLeft === null) {
+    scansLeft = 5;
+    localStorage.setItem("scansLeft", scansLeft);
+} else {
+    scansLeft = parseInt(scansLeft);
+}
 
-                function openGallery() {
-                    const input = document.getElementById("galleryInput");
-                    input.click();
-                    input.onchange = handleImage;
-                }
+function showUpgrade() {
+    alert("⚠ Free trial ended! Redirecting to upgrade page...");
+    setTimeout(() => {
+        window.location.href = "/subscription";
+    }, 1000);
+}
 
-                async function handleImage(event) {
-                    const file = event.target.files[0];
-                    event.target.value = ""; // reset AFTER getting file
-                    if (!file) return;
+/* =========================
+   ✅ CAMERA / GALLERY (MERGED)
+========================= */
+function openCamera() {
+    if (scansLeft <= 0) return showUpgrade(); // 🔥 added
 
-                    // show loader
-                    document.getElementById("loadingOverlay").style.display = "flex";
+    const input = document.getElementById("cameraInput");
+    input.click();
+    input.onchange = handleImage;
+}
 
-                    //  IMAGE PREPROCESSING (improves OCR)
-                    try {
-                        const img = new Image();
-                        img.src = URL.createObjectURL(file);
+function openGallery() {
+    if (scansLeft <= 0) return showUpgrade(); // 🔥 added
 
-                        await new Promise(resolve => img.onload = resolve);
+    const input = document.getElementById("galleryInput");
+    input.click();
+    input.onchange = handleImage;
+}
 
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
+/* =========================
+   ✅ MAIN IMAGE HANDLER (MERGED)
+========================= */
+async function handleImage(event) {
 
-                        // canvas.width = img.width;
-                        // canvas.height = img.height;
-                        const maxWidth = 800;
-                        const scale = Math.min(maxWidth / img.width, 1);
+    // 🔥 LIMIT CHECK (YOUR CODE)
+    if (scansLeft <= 0) {
+        showUpgrade();
+        return;
+    }
 
-                        canvas.width = img.width * scale;
-                        canvas.height = img.height * scale;
+    const file = event.target.files[0];
+    event.target.value = "";
+    if (!file) return;
 
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    document.getElementById("loadingOverlay").style.display = "flex";
 
-                        // ctx.drawImage(img, 0, 0);
+    try {
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
 
-                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                        const data = imageData.data;
+        await new Promise(resolve => img.onload = resolve);
 
-                        for (let i = 0; i < data.length; i += 4) {
-                            const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-                            const val = avg > 150 ? 255 : 0;
-                            data[i] = data[i + 1] = data[i + 2] = val;
-                        }
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
-                        ctx.putImageData(imageData, 0, 0);
+        const maxWidth = 800;
+        const scale = Math.min(maxWidth / img.width, 1);
 
-                        //  OCR
-                        document.getElementById("loadingOverlay").style.display = "flex";
-                        // const { data: { text } } = await Tesseract.recognize(canvas, 'eng');
-                        const { data: { text } } = await Tesseract.recognize(canvas, 'eng', {
-                            tessedit_char_whitelist: '0123456789.caloriesproteinfatcarbsfibersodiumsugar',
-                            logger: m => console.log(m)
-                        });
-                        console.log("OCR TEXT:", text);
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
 
-                        const parsed = parseNutrition(text);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                        // redirect
-                        const query = new URLSearchParams(parsed).toString();
-                        window.location.href = "/form?" + query;
-                    }
-                    catch (err) {
-                        console.error(err);
-                        alert("Scan failed. Try again.");
-                    }
-                }
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
 
-                // async function startScan() {
+        for (let i = 0; i < data.length; i += 4) {
+            const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            const val = avg > 150 ? 255 : 0;
+            data[i] = data[i + 1] = data[i + 2] = val;
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+
+        const { data: { text } } = await Tesseract.recognize(canvas, 'eng', {
+            tessedit_char_whitelist: '0123456789.caloriesproteinfatcarbsfibersodiumsugar',
+            logger: m => console.log(m)
+        });
+
+        console.log("OCR TEXT:", text);
+
+        const parsed = parseNutrition(text);
+
+        /* 🔥 DECREASE SCAN COUNT (YOUR CODE) */
+        scansLeft--;
+        localStorage.setItem("scansLeft", scansLeft);
+
+        /* 🔔 WARNINGS */
+        if (scansLeft === 2) alert("⚠ Only 2 scans left!");
+        if (scansLeft === 1) alert("🚨 Last scan remaining!");
+
+        /* ❌ BLOCK AFTER LIMIT */
+        if (scansLeft <= 0) {
+            document.getElementById("loadingOverlay").style.display = "none";
+            showUpgrade();
+            return;
+        }
+
+        document.getElementById("loadingOverlay").style.display = "none";
+
+        const query = new URLSearchParams(parsed).toString();
+        window.location.href = "/form?" + query;
+
+    } catch (err) {
+        console.error(err);
+        alert("Scan failed. Try again.");
+        document.getElementById("loadingOverlay").style.display = "none";
+    }
+}
+
+// async function startScan() {
                 //     const input = document.getElementById('imageInput');
 
                 //     input.click();
@@ -1647,82 +1691,88 @@
                 //     };
                 // }
 
+/* =========================
+   ✅ PARSER (UNCHANGED TEAM CODE)
+========================= */
+function parseNutrition(text) {
+    const lower = text.toLowerCase();
 
-                // SAME PARSER
-                function parseNutrition(text) {
-                    const lower = text.toLowerCase();
+    const extract = (regex) => {
+        const match = lower.match(regex);
+        if (!match) return 0;
 
-                    // const extract = (regex) => {
-                    //     const match = lower.match(regex);
-                    //     return match ? parseFloat(match[1]) : 0;
-                    // };
-                    const extract = (regex) => {
-                        const match = lower.match(regex);
-                        if (!match) return 0;
+        let val = match[1];
 
-                        let val = match[1];
+        val = val.replace(/o/g, '0');
+        val = val.replace(/g/g, '9');
+        val = val.replace(/l/g, '1');
 
-                        // fix OCR mistakes
-                        val = val.replace(/o/g, '0');
-                        val = val.replace(/g/g, '9');
-                        val = val.replace(/l/g, '1');
+        return parseFloat(val) || 0;
+    };
 
-                        return parseFloat(val) || 0;
-                    };
+    return {
+        Calories: extract(/(?:calories|energy)\s*(\d+\.?\d*)/),
+        Protein: extract(/protein\s*(\d+\.?\d*)/),
+        Carbohydrates: extract(/(?:carbs|carbohydrates?)\s*(\d+\.?\d*)/),
+        Fat: extract(/(?:total fat|fat)\s*(\d+\.?\d*)/),
+        Fiber: extract(/(?:fiber|fibre)\s*(\d+\.?\d*)/),
+        Sugars: extract(/(?:sugar|sugars)\s*(\d+\.?\d*)/),
+        Sodium: extract(/sodium\s*(\d+\.?\d*)/),
+        Cholesterol: extract(/cholesterol\s*(\d+\.?\d*)/)
+    };
+}
 
-                    return {
-                        Calories: extract(/(?:calories|energy)\s*(\d+\.?\d*)/),
-                        Protein: extract(/protein\s*(\d+\.?\d*)/),
-                        Carbohydrates: extract(/(?:carbs|carbohydrates?)\s*(\d+\.?\d*)/),
-                        Fat: extract(/(?:total fat|fat)\s*(\d+\.?\d*)/),
-                        Fiber: extract(/(?:fiber|fibre)\s*(\d+\.?\d*)/),
-                        Sugars: extract(/(?:sugar|sugars)\s*(\d+\.?\d*)/),
-                        Sodium: extract(/sodium\s*(\d+\.?\d*)/),
-                        Cholesterol: extract(/cholesterol\s*(\d+\.?\d*)/)
-                    };
-                }
+/* =========================
+   ✅ TEAM FEATURE (UNLABELED SCAN KEPT)
+========================= */
+function openUnlabeled() {
+    if (scansLeft <= 0) return showUpgrade(); // 🔥 added
 
-                function openUnlabeled() {
-                    const input = document.getElementById("unlabeledInput");
-                    input.click();
-                    input.onchange = handleUnlabeled;
-                }
+    const input = document.getElementById("unlabeledInput");
+    input.click();
+    input.onchange = handleUnlabeled;
+}
 
-                async function handleUnlabeled(event) {
-                    const file = event.target.files[0];
-                    if (!file) return;
+async function handleUnlabeled(event) {
 
-                    document.getElementById("loadingOverlay").style.display = "flex";
+    if (scansLeft <= 0) {
+        showUpgrade();
+        return;
+    }
 
-                    const formData = new FormData();
-                    formData.append("image", file);
+    const file = event.target.files[0];
+    if (!file) return;
 
-                    try {
-                        const res = await fetch("/unlabeled-scan", {
-                            method: "POST",
-                            body: formData
-                        });
+    document.getElementById("loadingOverlay").style.display = "flex";
 
-                        const data = await res.json();
+    const formData = new FormData();
+    formData.append("image", file);
 
-                        console.log("API RESPONSE:", data); // 🔥 IMPORTANT
+    try {
+        const res = await fetch("/unlabeled-scan", {
+            method: "POST",
+            body: formData
+        });
 
-                        // hide loader BEFORE redirect
-                        document.getElementById("loadingOverlay").style.display = "none";
+        const data = await res.json();
 
-                        const query = new URLSearchParams(data.macros).toString();
+        /* 🔥 DECREASE SCAN COUNT */
+        scansLeft--;
+        localStorage.setItem("scansLeft", scansLeft);
 
-                        window.location.href = "/form?" + query;
+        document.getElementById("loadingOverlay").style.display = "none";
 
-                    } catch (err) {
-                        console.error(err);
+        const query = new URLSearchParams(data.macros).toString();
+        window.location.href = "/form?" + query;
 
-                        document.getElementById("loadingOverlay").style.display = "none";
+    } catch (err) {
+        console.error(err);
+        document.getElementById("loadingOverlay").style.display = "none";
+        alert("Unlabeled scan failed");
+    }
 
-                        alert("Unlabeled scan failed");
-                    }
-                }
-                // async function handleUnlabeled(event) {
+}
+ // async function handleUnlabeled(event) {
                 //     const file = event.target.files[0];
                 //     if (!file) return;
 
@@ -1756,7 +1806,7 @@
                 //     }
                 // }
 
-            </script>
+</script>
             </div>
         </section>
 </body>
